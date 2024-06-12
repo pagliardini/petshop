@@ -25,6 +25,7 @@ CREATE TABLE IF NOT EXISTS `petShop`.`Productos` (
   `Stock` INT NOT NULL,
   `ID_Categoria` INT NOT NULL,
   `Descripcion` VARCHAR(45) NOT NULL,
+  `En_Promocion` BOOLEAN NOT NULL DEFAULT FALSE,
   PRIMARY KEY (`Codigo_de_barras`),
   INDEX `fk_Productos_Categoria1_idx` (`ID_Categoria` ASC) VISIBLE,
   CONSTRAINT `fk_Productos_Categoria1`
