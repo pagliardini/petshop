@@ -4,6 +4,7 @@ from ventas import gestionar_ventas
 from proveedores import gestionar_proveedores
 from categoria_productos import gestionar_categorias
 from clientes import gestionar_clientes
+from empleados import gestionar_empleados
 
 
 def menu_principal():
@@ -15,7 +16,8 @@ def menu_principal():
         print("4. Gestionar Proveedores")
         print("5. Gestionar Clientes")
         print("6. Gestionar Categorías de Productos")
-        print("7. Salir")
+        print("7. Gestionar empleados")
+        print("8. Salir")
         opcion = input("Ingrese una opción: ")
 
         if opcion == "1":
@@ -31,7 +33,9 @@ def menu_principal():
         elif opcion == "6":
             gestionar_categorias()            
         elif opcion == "7":
-            print("¡Hasta luego!")
+            gestionar_empleados()
+        elif opcion == "8":
+            print("Gracias por usar el Sistema de Control de Stock.")
             break
         else:
             print("Opción inválida. Por favor, seleccione una opción válida.")

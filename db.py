@@ -5,7 +5,7 @@ import json
 
 def config_bd():
     try:
-        with open('config.json', 'r') as config_file:
+        with open('/home/alan/kiosco/petshop/config.json', 'r') as config_file:
             config = json.load(config_file)
         return config
     except FileNotFoundError:
