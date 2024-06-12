@@ -2,7 +2,7 @@ from db import execute_query, fetch_query
 
 def gestionar_detalle_ventas():
     while True:
-        print("Gestionando Detalle de Ventas")
+        print("\nGestionando Detalle de Ventas")
         print("1. Mostrar Detalle de Ventas")
         print("2. Añadir Detalle de Venta")
         print("3. Eliminar Detalle de Venta")
@@ -20,8 +20,35 @@ def gestionar_detalle_ventas():
         else:
             print("Opción inválida. Por favor, seleccione una opción válida.")
 
+def listar_ventas_con_detalles():
+    query = """
+    SELECT v.ID_Venta, v.Fecha, v.Total_Venta
+    FROM Ventas v
+    JOIN Detalle_Ventas d ON v.ID_Venta = d.ID_Venta
+    GROUP BY v.ID_Venta, v.Fecha, v.Total_Venta
+    """
+    ventas = fetch_query(query)
+    print("Ventas con detalles:")
+    for index, venta in enumerate(ventas):
+        print(f"{index + 1}. ID: {venta[0]}, Fecha: {venta[1]}, Total: {venta[2]}")
+    return ventas
+
+def seleccionar_venta():
+    ventas = listar_ventas_con_detalles()
+    seleccion = None
+    while seleccion is None:
+        try:
+            opcion = int(input("Seleccione el número de la venta: "))
+            if 1 <= opcion <= len(ventas):
+                seleccion = ventas[opcion - 1][0]  # Devuelve el ID de la venta seleccionada
+            else:
+                print("Número de venta inválido. Intente nuevamente.")
+        except ValueError:
+            print("Entrada inválida. Por favor, ingrese un número.")
+    return seleccion
+
 def mostrar_detalle_ventas():
-    id_venta = input("Ingrese el ID de la venta para ver sus detalles: ")
+    id_venta = seleccionar_venta()
     query = """
     SELECT d.ID_Detalle, d.Codigo_de_barras, d.Cantidad_Unidades, d.Precio_Unitario, d.Descuento, d.Total_Item
     FROM Detalle_Ventas d
@@ -36,7 +63,7 @@ def mostrar_detalle_ventas():
         print("No se encontraron detalles para esta venta.")
 
 def añadir_detalle_venta():
-    id_venta = input("Ingrese el ID de la venta: ")
+    id_venta = seleccionar_venta()
     codigo_de_barras = input("Ingrese el código de barras del producto: ")
 
     # Verificar si el producto existe

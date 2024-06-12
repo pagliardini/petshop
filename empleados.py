@@ -26,12 +26,40 @@ def gestionar_empleados():
 
 
 def mostrar_empleados():
-    query = "SELECT CUIL_Empleado, Nombre, Apellido, Telefono, Email, Direccion, ID_Sucursal FROM Empleados"
+    query = """
+    SELECT E.CUIL_Empleado, E.Nombre, E.Apellido, E.Telefono, E.Email, E.Direccion, S.Ciudad
+    FROM Empleados E
+    JOIN Sucursales S ON E.ID_Sucursal = S.ID_Sucursal
+    """
     empleados = fetch_query(query)
     print("Empleados:")
     for empleado in empleados:
         print(
-            f"CUIL: {empleado[0]}, Nombre: {empleado[1]}, Apellido: {empleado[2]}, Teléfono: {empleado[3]}, Email: {empleado[4]}, Dirección: {empleado[5]}, ID Sucursal: {empleado[6]}")
+            f"CUIL: {empleado[0]}, Nombre: {empleado[1]}, Apellido: {empleado[2]}, Teléfono: {empleado[3]}, Email: {empleado[4]}, Dirección: {empleado[5]}, Sucursal: {empleado[6]}")
+
+
+def listar_sucursales():
+    query = "SELECT ID_Sucursal, Ciudad FROM Sucursales"
+    sucursales = fetch_query(query)
+    print("Sucursales:")
+    for index, sucursal in enumerate(sucursales):
+        print(f"{index + 1}. Ciudad: {sucursal[1]}")
+    return sucursales
+
+
+def seleccionar_sucursal():
+    sucursales = listar_sucursales()
+    seleccion = None
+    while seleccion is None:
+        try:
+            opcion = int(input("Seleccione el número de la sucursal: "))
+            if 1 <= opcion <= len(sucursales):
+                seleccion = sucursales[opcion - 1][0]
+            else:
+                print("Número de sucursal inválido. Intente nuevamente.")
+        except ValueError:
+            print("Entrada inválida. Por favor, ingrese un número.")
+    return seleccion
 
 
 def añadir_empleado():
@@ -41,7 +69,7 @@ def añadir_empleado():
     telefono = input("Ingrese el teléfono del empleado: ")
     email = input("Ingrese el email del empleado: ")
     direccion = input("Ingrese la dirección del empleado (opcional): ")
-    id_sucursal = input("Ingrese el ID de la sucursal: ")
+    id_sucursal = seleccionar_sucursal()
 
     query = """
     INSERT INTO Empleados (CUIL_Empleado, Nombre, Apellido, Telefono, Email, Direccion, ID_Sucursal)
@@ -95,7 +123,8 @@ def actualizar_empleado():
     telefono = input("Ingrese el nuevo teléfono del empleado (dejar en blanco para no cambiar): ")
     email = input("Ingrese el nuevo email del empleado (dejar en blanco para no cambiar): ")
     direccion = input("Ingrese la nueva dirección del empleado (dejar en blanco para no cambiar): ")
-    id_sucursal = input("Ingrese el nuevo ID de la sucursal (dejar en blanco para no cambiar): ")
+    cambiar_sucursal = input("¿Desea cambiar la sucursal? (s/n): ")
+    id_sucursal = seleccionar_sucursal() if cambiar_sucursal.lower() == 's' else None
 
     query = "UPDATE Empleados SET "
     params = []
