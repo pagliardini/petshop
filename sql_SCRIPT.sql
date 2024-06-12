@@ -2,8 +2,8 @@
 -- Schema petShop
 -- -----------------------------------------------------
 
-CREATE SCHEMA IF NOT EXISTS `petShop` DEFAULT CHARACTER SET utf8 ;
-USE `petShop` ;
+CREATE SCHEMA IF NOT EXISTS `petShop` DEFAULT CHARACTER SET utf8;
+USE `petShop`;
 
 -- -----------------------------------------------------
 -- Table `petShop`.`Categoria`
@@ -100,12 +100,14 @@ ENGINE = InnoDB;
 -- Table `petShop`.`Detalle_Ventas`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `petShop`.`Detalle_Ventas` (
+  `ID_Detalle` INT NOT NULL AUTO_INCREMENT,
   `ID_Venta` INT NOT NULL,
   `Codigo_de_barras` VARCHAR(45) NOT NULL,
   `Cantidad_Unidades` INT NOT NULL,
   `Precio_Unitario` DECIMAL(10,2) NOT NULL,
   `Descuento` DECIMAL(5,2) NOT NULL,
   `Total_Item` DECIMAL(10,2) NOT NULL,
+  PRIMARY KEY (`ID_Detalle`),
   INDEX `fk_Detalle_Ventas_Productos1_idx` (`Codigo_de_barras` ASC) VISIBLE,
   INDEX `fk_Detalle_Ventas_Ventas1_idx` (`ID_Venta` ASC) VISIBLE,
   CONSTRAINT `fk_Detalle_Ventas_Productos1`
@@ -124,7 +126,7 @@ ENGINE = InnoDB;
 -- Table `petShop`.`Empleados`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `petShop`.`Empleados` (
-  `CUIL_Empleado` INT NOT NULL AUTO_INCREMENT,
+  `CUIL_Empleado` VARCHAR(45) NOT NULL,
   `Nombre` VARCHAR(45) NOT NULL,
   `Apellido` VARCHAR(45) NOT NULL,
   `Telefono` VARCHAR(30) NOT NULL,
@@ -168,11 +170,13 @@ ENGINE = InnoDB;
 -- Table `petShop`.`Detalle_Pedidos`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `petShop`.`Detalle_Pedidos` (
+  `ID_Detalle` INT NOT NULL AUTO_INCREMENT,
   `ID_Pedido` INT NOT NULL,
   `Codigo_de_barras` VARCHAR(45) NOT NULL,
   `Cantidad` INT NOT NULL,
   `Precio_Unitario` DECIMAL(10,2) NOT NULL,
   `Total` DECIMAL(10,2) NOT NULL,
+  PRIMARY KEY (`ID_Detalle`),
   INDEX `fk_Detalle_Pedidos_Productos1_idx` (`Codigo_de_barras` ASC) VISIBLE,
   INDEX `fk_Detalle_Pedidos_Pedidos1_idx` (`ID_Pedido` ASC) VISIBLE,
   CONSTRAINT `fk_Detalle_Pedidos_Productos1`
@@ -186,7 +190,3 @@ CREATE TABLE IF NOT EXISTS `petShop`.`Detalle_Pedidos` (
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
-
-SET SQL_MODE=@OLD_SQL_MODE;
-SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
-SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;

@@ -1,6 +1,4 @@
-# detalle_ventas.py
-
-detalle_ventas = []
+from db import execute_query, fetch_query
 
 def gestionar_detalle_ventas():
     while True:
@@ -23,34 +21,68 @@ def gestionar_detalle_ventas():
             print("Opción inválida. Por favor, seleccione una opción válida.")
 
 def mostrar_detalle_ventas():
-    print("Detalle de Ventas:")
-    for detalle in detalle_ventas:
-        print(detalle)
+    id_venta = input("Ingrese el ID de la venta para ver sus detalles: ")
+    query = """
+    SELECT d.ID_Detalle, d.Codigo_de_barras, d.Cantidad_Unidades, d.Precio_Unitario, d.Descuento, d.Total_Item
+    FROM Detalle_Ventas d
+    WHERE d.ID_Venta = %s
+    """
+    detalles = fetch_query(query, (id_venta,))
+    if detalles:
+        print("Detalles de Ventas:")
+        for detalle in detalles:
+            print(f"ID Detalle: {detalle[0]}, Código de Barras: {detalle[1]}, Cantidad: {detalle[2]}, Precio Unitario: {detalle[3]}, Descuento: {detalle[4]}, Total: {detalle[5]}")
+    else:
+        print("No se encontraron detalles para esta venta.")
 
 def añadir_detalle_venta():
     id_venta = input("Ingrese el ID de la venta: ")
+    codigo_de_barras = input("Ingrese el código de barras del producto: ")
+
+    # Verificar si el producto existe
+    producto_existe = fetch_query("SELECT COUNT(*) FROM Productos WHERE Codigo_de_barras = %s", (codigo_de_barras,))[0][0]
+    if producto_existe == 0:
+        print(f"Error: El producto con el código de barras {codigo_de_barras} no existe.")
+        return
+
     cantidad_unidades = int(input("Ingrese la cantidad de unidades: "))
     precio_unitario = float(input("Ingrese el precio unitario: "))
-    descuento = float(input("Ingrese el descuento: "))
-    total = float(input("Ingrese el total: "))
-    codigo_barras = input("Ingrese el código de barras del producto: ")
-    nuevo_detalle = {
-        "id_venta": id_venta,
-        "cantidad_unidades": cantidad_unidades,
-        "precio_unitario": precio_unitario,
-        "descuento": descuento,
-        "total": total,
-        "codigo_barras": codigo_barras
-    }
-    detalle_ventas.append(nuevo_detalle)
-    print("Detalle de venta añadido correctamente.")
+    descuento = float(input("Ingrese el descuento (opcional, puede dejar en blanco): ") or 0)
+    total_item = cantidad_unidades * precio_unitario - descuento
+
+    query = """
+    INSERT INTO Detalle_Ventas (ID_Venta, Codigo_de_barras, Cantidad_Unidades, Precio_Unitario, Descuento, Total_Item)
+    VALUES (%s, %s, %s, %s, %s, %s)
+    """
+    params = (id_venta, codigo_de_barras, cantidad_unidades, precio_unitario, descuento, total_item)
+
+    try:
+        execute_query(query, params)
+        print("Detalle de venta añadido correctamente.")
+    except Exception as err:
+        print(f"El error '{err}' ocurrió al añadir detalle de venta.")
 
 def eliminar_detalle_venta():
     id_detalle = input("Ingrese el ID del detalle de venta a eliminar: ")
-    for detalle in detalle_ventas:
-        if detalle.get("id_detalle") == id_detalle:
-            detalle_ventas.remove(detalle)
-            print("Detalle de venta eliminado correctamente.")
-            break
-    else:
-        print("No se encontró el detalle de venta.")
+
+    # Verificar si el detalle existe
+    query_check = "SELECT COUNT(*) FROM Detalle_Ventas WHERE ID_Detalle = %s"
+    params_check = (id_detalle,)
+    detalle_existe = fetch_query(query_check, params_check)[0][0]
+
+    if detalle_existe == 0:
+        print("Error: El detalle de venta con el ID especificado no existe.")
+        return
+
+    query = "DELETE FROM Detalle_Ventas WHERE ID_Detalle = %s"
+    params = (id_detalle,)
+
+    try:
+        execute_query(query, params)
+        print("Detalle de venta eliminado correctamente.")
+    except Exception as err:
+        print(f"Error al eliminar detalle de venta: {err}")
+
+# Ejemplo de uso
+if __name__ == "__main__":
+    gestionar_detalle_ventas()

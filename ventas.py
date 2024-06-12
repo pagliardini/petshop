@@ -1,5 +1,5 @@
 from db import execute_query, fetch_query, execute_query_with_last_id
-from detalle_ventas import detalle_ventas
+from detalle_ventas import gestionar_detalle_ventas
 def gestionar_ventas():
     while True:
         print("Gestionando Ventas")
@@ -17,7 +17,7 @@ def gestionar_ventas():
         elif opcion == "3":
             eliminar_venta()
         elif opcion == "4":
-            detalle_ventas()
+            gestionar_detalle_ventas()
         elif opcion == "5":
             break
         else:

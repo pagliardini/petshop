@@ -1,5 +1,5 @@
 from db import execute_query, fetch_query
-
+from pedidos import gestionar_pedidos
 def gestionar_sucursales():
     while True:
         print("\nGestionar Sucursales")
@@ -7,7 +7,8 @@ def gestionar_sucursales():
         print("2. Agregar Sucursal")
         print("3. Actualizar Sucursal")
         print("4. Eliminar Sucursal")
-        print("5. Volver al Menú Principal")
+        print("5. Pedidos Sucursales")
+        print("6. Volver al Menú Principal")
         opcion = input("Ingrese una opción: ")
 
         if opcion == "1":
@@ -19,6 +20,8 @@ def gestionar_sucursales():
         elif opcion == "4":
             eliminar_sucursal()
         elif opcion == "5":
+            gestionar_pedidos()
+        elif opcion == "6":
             break
         else:
             print("Opción inválida. Por favor, seleccione una opción válida.")
