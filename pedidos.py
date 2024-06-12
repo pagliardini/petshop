@@ -1,4 +1,4 @@
-from db import execute_query, fetch_query, execute_query_with_last_id
+from db import execute_query, fetch_query, ultimoid
 
 def gestionar_pedidos():
     while True:
@@ -53,7 +53,7 @@ def añadir_pedido():
     params_pedido = (id_proveedor, estado, id_sucursal)
 
     try:
-        id_pedido = execute_query_with_last_id(query_pedido, params_pedido)
+        id_pedido = ultimoid(query_pedido, params_pedido)
         print(f"Pedido añadido correctamente con ID {id_pedido}")
     except Exception as err:
         print(f"Error al añadir pedido: {err}")

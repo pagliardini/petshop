@@ -1,4 +1,4 @@
-from db import execute_query, fetch_query, execute_query_with_last_id
+from db import execute_query, fetch_query, ultimoid
 from detalle_ventas import gestionar_detalle_ventas
 def gestionar_ventas():
     while True:
@@ -55,7 +55,7 @@ def añadir_venta():
     params_venta = (forma_pago, descuento, total_venta, id_cliente, id_sucursal)
 
     try:
-        id_venta = execute_query_with_last_id(query_venta, params_venta)
+        id_venta = ultimoid(query_venta, params_venta)
         print(f"Venta añadida correctamente con ID {id_venta}")
     except Exception as err:
         print(f"Error al añadir venta: {err}")

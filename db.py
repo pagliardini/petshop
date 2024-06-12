@@ -69,7 +69,7 @@ def fetch_query(query, params=None):
     return result
 
 
-def execute_query_with_last_id(query, params=None):
+def ultimoid(query, params=None):
     connection = create_connection()
     if connection is None:
         return None
