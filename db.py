@@ -1,41 +1,26 @@
 import mysql.connector
 from mysql.connector import Error
-import json
 
+# Configuración de la base de datos directamente en el script
+DB_CONFIG = {
+    "host": "localhost",
+    "user": "adminps",
+    "passwd": "adminps",
+    "database": "petShop"
+}
 
-def config_bd():
-    try:
-        with open('/home/alan/kiosco/petshop/config.json', 'r') as config_file:
-            config = json.load(config_file)
-        return config
-    except FileNotFoundError:
-        print("Error: No se encontró el archivo 'config.json'.")
-        return None
-    except json.JSONDecodeError:
-        print("Error: El archivo 'config.json' está mal formateado.")
-        return None
-
-
-def create_connection():
-    config = config_bd()
-    if config is None:
-        return None
-
+def crear_conexion():
     connection = None
     try:
-        connection = mysql.connector.connect(
-            host=config["host"],
-            user=config["usuario"],
-            passwd=config["pass"],
-            database=config["db"]
-        )
+        connection = mysql.connector.connect(**DB_CONFIG)
+        print("Conexión a la base de datos exitosa")
     except Error as e:
         print(f"El error '{e}' ocurrió")
     return connection
 
 
 def execute_query(query, params=None):
-    connection = create_connection()
+    connection = crear_conexion()
     if connection is None:
         return
 
@@ -52,7 +37,7 @@ def execute_query(query, params=None):
 
 
 def fetch_query(query, params=None):
-    connection = create_connection()
+    connection = crear_conexion()
     if connection is None:
         return None
 
@@ -70,7 +55,7 @@ def fetch_query(query, params=None):
 
 
 def ultimoid(query, params=None):
-    connection = create_connection()
+    connection = crear_conexion()
     if connection is None:
         return None
 
